@@ -216,7 +216,7 @@ nsp check
 
   It should return <https://asimtestapp.localtunnel.me/> that we can use.
 
-  > **_//==============================================================\\_**
+> **_//==============================================================\\_**
 >
 > **_AUTOMATION USING NPM SCRIPTS_**
 >
@@ -489,7 +489,161 @@ to a ".bin" folder inside the "node_modules" folder of our root, this makes them
 
   This way we avoided opening two terminals at the same time like we did before when setting up localtunnel.
 
+> **_//==============================================================\\_**
+>
+> **_TRANSPILING - BABEL_**
+>
+> **_\\==============================================================//_**
 
+Transpiling means changing ES6 code into ES5 to ensure our JS code runs in the browsers that do not yet fully support the latest version of JS, we will use Babel.
+
+To configure babel:
+
+01. ) Creating a .babelrc file in our root, then put this code in that file:
+
+  ```
+  {
+  "presets": [
+    "latest"
+    ]
+  }
+  ```
+
+  here we are saying we want to use all the latest JS features, this is all it takes to have babel transpile our code.
+
+  to test this:
+   
+01. ) Change our code from the current CommonJS module to ES6, lets start with the startMessage.js file, we will change it as follows:
+
+    
+    ```
+    import chalk from 'chalk';
+
+    console.log(chalk.green('Starting app in dev mode...'));
+    ```
+
+    Now to run this new ES6 code we have to change our npm script in the package.json to use babel to transpile the code before running it, so our package.json becomes:
+
+    Observe the "prestart" script.
+
+    ```
+    {
+      "name": "javascript-development-environment",
+      "version": "1.0.0",
+      "description": "JavaScript development environment Pluralsight course by Cory House",
+      "scripts": {
+        "prestart": "babel-node buildScripts/startMessage.js",
+        "start": "npm-run-all --parallel security-check open:src",
+        "open:src": "node buildScripts/srcServer.js",
+        "security-check": "nsp check",
+        "localtunnel": "lt --port 3000",
+        "share": "npm-run-all --parallel open:src localtunnel"
+      },
+      "author": "Cory House",
+      "license": "MIT",
+      "dependencies": {
+        "whatwg-fetch": "1.0.0"
+      },
+      "devDependencies": {
+        "babel-cli": "6.16.0",
+        "babel-core": "6.17.0",
+        "babel-loader": "6.2.5",
+        "babel-preset-latest": "6.16.0",
+        "babel-register": "6.16.3",
+        "chai": "3.5.0",
+        "chalk": "1.1.3",
+        "cheerio": "0.22.0",
+        "compression": "1.6.2",
+        "cross-env": "3.1.3",
+        "css-loader": "0.25.0",
+        "eslint": "3.8.1",
+        "eslint-plugin-import": "2.0.1",
+        "eslint-watch": "2.1.14",
+        "express": "4.14.0",
+        "extract-text-webpack-plugin": "1.0.1",
+        "html-webpack-plugin": "2.22.0",
+        "jsdom": "9.8.0",
+        "json-schema-faker": "0.3.6",
+        "json-server": "0.8.22",
+        "localtunnel": "1.8.1",
+        "mocha": "3.1.2",
+        "nock": "8.1.0",
+        "npm-run-all": "3.1.1",
+        "nsp": "2.6.2",
+        "numeral": "1.5.3",
+        "open": "0.0.5",
+        "rimraf": "2.5.4",
+        "style-loader": "0.13.1",
+        "webpack": "1.13.2",
+        "webpack-dev-middleware": "1.8.4",
+        "webpack-hot-middleware": "2.13.0",
+        "webpack-md5-hash": "0.0.5"
+      }
+    }
+    ```
+
+    If the app runs it means we have configured babel correctly and it is transpiling the ES6 code.
+
+  > Note: If you keep getting errors attempt to install babel-cli globally by running the command: "npm install -g babel-cli"
+
+01. ) Lets change all our node commands to use babel, by changing the npm scripts in the package.json file we will set our app up to use babel and ES6, observe 
+  the changes in the scripts sections:
+
+  ```
+  {
+    "name": "javascript-development-environment",
+    "version": "1.0.0",
+    "description": "JavaScript development environment Pluralsight course by Cory House",
+    "scripts": {
+      "prestart": "babel-node buildScripts/startMessage.js",
+      "start": "npm-run-all --parallel security-check open:src",
+      "open:src": "babel-node buildScripts/srcServer.js",
+      "security-check": "nsp check",
+      "localtunnel": "lt --port 3000",
+      "share": "npm-run-all --parallel open:src localtunnel"
+    },
+    "author": "Cory House",
+    "license": "MIT",
+    "dependencies": {
+      "whatwg-fetch": "1.0.0"
+    },
+    "devDependencies": {
+      "babel-cli": "^6.16.0",
+      "babel-core": "^6.17.0",
+      "babel-loader": "^6.2.5",
+      "babel-preset-latest": "^6.16.0",
+      "babel-register": "^6.16.3",
+      "chai": "3.5.0",
+      "chalk": "1.1.3",
+      "cheerio": "0.22.0",
+      "compression": "1.6.2",
+      "cross-env": "3.1.3",
+      "css-loader": "0.25.0",
+      "eslint": "3.8.1",
+      "eslint-plugin-import": "2.0.1",
+      "eslint-watch": "2.1.14",
+      "express": "4.14.0",
+      "extract-text-webpack-plugin": "1.0.1",
+      "html-webpack-plugin": "2.22.0",
+      "jsdom": "9.8.0",
+      "json-schema-faker": "0.3.6",
+      "json-server": "0.8.22",
+      "localtunnel": "1.8.1",
+      "mocha": "3.1.2",
+      "nock": "8.1.0",
+      "npm-run-all": "3.1.1",
+      "nsp": "2.6.2",
+      "numeral": "1.5.3",
+      "open": "0.0.5",
+      "rimraf": "2.5.4",
+      "style-loader": "0.13.1",
+      "webpack": "1.13.2",
+      "webpack-dev-middleware": "1.8.4",
+      "webpack-hot-middleware": "2.13.0",
+      "webpack-md5-hash": "0.0.5"
+    }
+  }
+  ```
 
 
 
